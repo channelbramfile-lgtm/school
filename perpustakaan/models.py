@@ -6,7 +6,14 @@ class Buku(models.Model):
     judul           = models.CharField(max_length=250,null=False,blank=False,verbose_name="Judul")
     isbn            = models.CharField(max_length=50,null=True,blank=True,verbose_name="ISBN")
     tahunTerbit     = models.CharField(max_length=20,null=True,blank=True,verbose_name="Tahun Terbit")
-    sinopsi         = models.CharField(null=False,blank=False,verbose_name="Sinopsis")
+    sinopsi         = models.TextField(null=False,blank=False,verbose_name="Sinopsis")
 
     def __str__(self):
        return self.judul
+    
+class Penulis(models.Model):
+    penulisId          = models.CharField(max_length=50,null=False,blank=False,verbose_name="Penulis ID")
+    namapenulis          = models.CharField(max_length=250,null=False,blank=False,verbose_name="Nama Penulis")
+    
+    def __str__(self):
+       return self.namapenulis

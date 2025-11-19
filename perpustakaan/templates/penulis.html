@@ -11,7 +11,7 @@
             </div>
         {% endfor %}
 <div class="col-md-6">
-<a href="{% url "tambah_buku" %}" class="btn btn-primary btn-sm">Tambah</a>
+<a href="{% url "tambah_penulis" %}" class="btn btn-primary btn-sm">Tambah</a>
 
 </div>
 
@@ -27,25 +27,20 @@
     <tr>
       <th scope="col">#</th>
       <th scope="col">ID</th>
-      <th scope="col">JUDUL</th>
-      <th scope="col">ISBN</th>
-      <th scope="col">TAHUN TERBIT</th>
-      <th scope="col">SINOPSIS</th>
-      <th scope="col">AKSI</th>
+      <th scope="col">NAMA PENULIS</th>
+      
     </tr>
   </thead>
   <tbody>
-    {%for a in buku%}
+    {%for a in penulis%}
     <tr>
-      <th scope="row">1</th>
-      <td>{{a.bukuId}}</td>
-      <td>{{a.judul}}</td>
-    `<td>{{a.isbn}}</td>
-    `<td>{{a.tahunTerbit}}</td>
-    `<td>{{a.sinopsi}}</td>
-    `<td>
-      <a href="{%url 'edit_buku' a.id%}"class="btn btn-warning btn-sm">Edit</a>
-      <a href="{%url 'hapus_buku' a.id%}" class="btn btn-danger btn-sm">Hapus</a>
+      <th scope="row">{{forloop.counter}}</th>
+      <td>{{a.penulisId}}</td>
+      <td>{{a.namapenulis}}</td>
+    
+      <td>
+      <a href="" class="btn btn-warning btn-sm">Edit</a>
+      <a href="{%url 'hapus_penulis' a.id%}" class="btn btn-danger btn-sm">Hapus</a>
     </td>
 
     </tr>
