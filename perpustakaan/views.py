@@ -1,7 +1,7 @@
 from django.shortcuts import render,redirect
 from django.http import HttpResponse
-from .models import Buku,Penulis
-from .forms import Tambah_Buku, Edit_Buku, Tambah_Penulis
+from .models import Buku,Penulis,Penebit ,Pendidikan,HistoryPendidikan
+from .forms import Tambah_Buku, Edit_Buku, Tambah_Penulis , Edit_Penulis, Tambah_Penebit , Edit_Penebit , Tambah_Pendidikan , Edit_Pendidikan
 from django.contrib import messages
 
 
@@ -53,6 +53,30 @@ def hapus_buku(request,idbuku):
     messages.success(request,'Data Berhasil Dihapus')
     return redirect('buku')
 
+def edit_buku(request,idbuku):
+    bukuid = Buku.objects.get(id = idbuku)
+    ambildata = Buku.objects.filter(id = idbuku).first()
+    if request.method =="POST":
+        form =Edit_Buku(request.POST, instance=ambildata)
+        if form.is_valid():
+            form.save()
+            messages.success(request,'Data Berhasil DiPerbaharui')
+            return redirect('buku')
+    else:
+        form =Edit_Buku(instance=ambildata)
+    context = {
+        'form':form,
+    }
+
+    return render(request,'Edit_buku.html',context)
+
+
+
+
+
+
+
+
 def penulis(request):
 
      #select from penulis 
@@ -88,19 +112,144 @@ def hapus_penulis(request,idpenulis):
     messages.success(request,'Data Berhasil Dihapus')
     return redirect('penulis')
 
-def edit_buku(request,idbuku):
-    bukuid = Buku.objects.get(id = idbuku)
-    ambildata = Buku.objects.filter(id = idbuku).first()
+def edit_penulis(request,idpenulis):
+    penulisid = Penulis.objects.get(id = idpenulis)
+    ambildata = Penulis.objects.filter(id = idpenulis).first()
     if request.method =="POST":
-        form =Edit_Buku(request.POST, instance=ambildata)
+        form =Edit_Penulis(request.POST, instance=ambildata)
         if form.is_valid():
             form.save()
             messages.success(request,'Data Berhasil DiPerbaharui')
-            return redirect('buku')
+            return redirect('penulis')
     else:
-        form =Edit_Buku(instance=ambildata)
+        form =Edit_Penulis(instance=ambildata)
     context = {
         'form':form,
     }
 
-    return render(request,'Edit_buku.html',context)
+    return render(request,'Edit_penulis.html',context)
+
+
+
+
+
+
+
+def penebit(request):
+
+     #select from penebit
+    penebit = Penebit.objects.all()
+
+    context={
+       'penebit':penebit,
+    }
+    
+   
+    return render(request,'penebit.html',context)
+
+def tambah_penebit(request):
+
+    if request.method == 'POST':
+        form =Tambah_Penebit(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request,'Data Berhasil Disimpan')
+            return redirect('penebit')
+            
+    else:
+        form =Tambah_Penebit()
+    context = {
+        'form':form,
+    }
+
+    return render(request,'tambah_penebit.html',context)
+
+def hapus_penebit(request,idpenebit):
+    penebitid = Penebit.objects.get(id = idpenebit)
+    penebitid.delete()
+    messages.success(request,'Data Berhasil Dihapus')
+    return redirect('penebit')
+
+def edit_penebit(request,idpenebit):
+    penebitid = Penebit.objects.get(id = idpenebit)
+    ambildata = Penebit.objects.filter(id = idpenebit).first()
+    if request.method =="POST":
+        form =Edit_Penebit(request.POST, instance=ambildata)
+        if form.is_valid():
+            form.save()
+            messages.success(request,'Data Berhasil DiPerbaharui')
+            return redirect('penebit')
+    else:
+        form =Edit_Penebit(instance=ambildata)
+    context = {
+        'form':form,
+    }
+
+    return render(request,'Edit_penebit.html',context)
+
+
+
+
+
+def pendidikan(request):
+
+     #select from pendidikan
+    pendidikan = Pendidikan.objects.all()
+
+    context={
+       'pendidikan':pendidikan,
+    }
+    
+   
+    return render(request,'pendidikan.html',context)
+
+def tambah_pendidikan(request):
+
+    if request.method == 'POST':
+        form =Tambah_Pendidikan(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request,'Data Berhasil Disimpan')
+            return redirect('pendidikan')
+            
+    else:
+        form =Tambah_Pendidikan()
+    context = {
+        'form':form,
+    }
+
+    return render(request,'tambah_pendidikan.html',context)
+
+def hapus_pendidikan(request,idpendidikan):
+    pendidikanid = Pendidikan.objects.get(id = idpendidikan)
+    pendidikanid.delete()
+    messages.success(request,'Data Berhasil Dihapus')
+    return redirect('pendidikan')
+
+def edit_pendidikan(request,idpendidikan):
+    pendidikanid = Pendidikan.objects.get(id = idpendidikan)
+    ambildata = Pendidikan.objects.filter(id = idpendidikan).first()
+    if request.method =="POST":
+        form =Edit_Pendidikan(request.POST, instance=ambildata)
+        if form.is_valid():
+            form.save()
+            messages.success(request,'Data Berhasil DiPerbaharui')
+            return redirect('pendidikan')
+    else:
+        form =Edit_Pendidikan(instance=ambildata)
+    context = {
+        'form':form,
+    }
+
+    return render(request,'Edit_pendidikan.html',context)
+
+def view_penulis(request,id):
+     view = Penulis.objects.filter(id = id).first()
+     history =HistoryPendidikan.objects.filter(penulis_id = id)
+     context={
+       'view':view,
+       'history':history,
+    }
+    
+   
+     return render(request,'view_penulis.html',context)
