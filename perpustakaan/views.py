@@ -1,7 +1,7 @@
 from django.shortcuts import render,redirect
 from django.http import HttpResponse
-from .models import Buku,Penulis,Penebit ,Pendidikan,HistoryPendidikan
-from .forms import Tambah_Buku, Edit_Buku, Tambah_Penulis , Edit_Penulis, Tambah_Penebit , Edit_Penebit , Tambah_Pendidikan , Edit_Pendidikan
+from .models import Buku,Penulis,Penebit ,Pendidikan,HistoryPendidikan , Sekolah
+from .forms import Tambah_History_Pendidikan, Tambah_Buku, Edit_Buku, Tambah_Sekolah, Edit_Sekolah, Tambah_Penulis , Edit_Penulis, Tambah_Penebit , Edit_Penebit , Tambah_Pendidikan , Edit_Pendidikan
 from django.contrib import messages
 
 
@@ -33,7 +33,7 @@ def buku(request):
 def tambah_buku(request):
 
     if request.method == 'POST':
-        form =Tambah_Buku(request.POST)
+        form =Tambah_Buku(request.POST,request.FILES)
         if form.is_valid():
             form.save()
             messages.success(request,'Data Berhasil Disimpan')
@@ -70,6 +70,16 @@ def edit_buku(request,idbuku):
 
     return render(request,'Edit_buku.html',context)
 
+def view_buku(request,idbuku):
+     buku = Buku.objects.filter(id = idbuku).first()
+    
+     context={
+       'buku':buku,
+      
+    }
+    
+   
+     return render(request,'view_buku.html',context) 
 
 
 
@@ -92,7 +102,7 @@ def penulis(request):
 def tambah_penulis(request):
 
     if request.method == 'POST':
-        form =Tambah_Penulis(request.POST)
+        form =Tambah_Penulis(request.POST,request.FILES)
         if form.is_valid():
             form.save()
             messages.success(request,'Data Berhasil Disimpan')
@@ -253,3 +263,79 @@ def view_penulis(request,id):
     
    
      return render(request,'view_penulis.html',context)
+
+def tambah_history_pendidikan(request,idpenulis):
+
+    #select * from penulis where id= idpenulis
+
+    penulisid= Penulis.objects.get(id=idpenulis)
+    
+    if request.method =="POST":
+        form = Tambah_History_Pendidikan(request.POST)
+        if form.is_valid():
+            writer = form.save(commit=False)
+            writer.penulis_id = penulisid.id
+            form.save()
+            messages.success(request,'Data Pendidikan Berhasil Ditambah')
+            return redirect('view_penulis',id=penulisid.id)
+    else:
+        form = Tambah_History_Pendidikan()
+        
+    context= {
+            'form':form,
+        }
+    return render(request,'tambah_history_pendidikan.html',context)    
+
+
+
+def sekolah(request):
+
+     #select from sekolah 
+    sekolah = Sekolah.objects.all()
+
+    context={
+       'sekolah':sekolah,
+    }
+    
+   
+    return render(request,'sekolah.html',context)
+
+def tambah_sekolah(request):
+
+    if request.method == 'POST':
+        form =Tambah_Sekolah(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request,'Data Berhasil Disimpan')
+            return redirect('sekolah')
+            
+    else:
+        form =Tambah_Sekolah()
+    context = {
+        'form':form,
+    }
+
+    return render(request,'tambah_sekolah.html',context)
+
+def hapus_sekolah(request,idsekolah):
+    sekolahid = Sekolah.objects.get(id = idsekolah)
+    sekolahid.delete()
+    messages.success(request,'Data Berhasil Dihapus')
+    return redirect('sekolah')
+
+def edit_sekolah(request,idsekolah):
+    sekolahid = Sekolah.objects.get(id = idsekolah)
+    ambildata = Sekolah.objects.filter(id = idsekolah).first()
+    if request.method =="POST":
+        form =Edit_Sekolah(request.POST, instance=ambildata)
+        if form.is_valid():
+            form.save()
+            messages.success(request,'Data Berhasil DiPerbaharui')
+            return redirect('sekolah')
+    else:
+        form =Edit_Sekolah(instance=ambildata)
+    context = {
+        'form':form,
+    }
+
+    return render(request,'Edit_sekolah.html',context)

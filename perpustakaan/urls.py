@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path,include
-from .views import dashboard, profil,kontak,alamat,sejarah,buku,tambah_buku,hapus_buku,edit_buku,    penulis,tambah_penulis,hapus_penulis,edit_penulis,view_penulis,    penebit,tambah_penebit,hapus_penebit,edit_penebit ,    pendidikan,tambah_pendidikan,hapus_pendidikan,edit_pendidikan
+from .views import sekolah,tambah_sekolah,hapus_sekolah,edit_sekolah, dashboard, profil,kontak,alamat,sejarah,buku,tambah_buku,hapus_buku,edit_buku,view_buku,    penulis,tambah_penulis,hapus_penulis,edit_penulis,view_penulis,    penebit,tambah_penebit,hapus_penebit,edit_penebit ,    pendidikan,tambah_pendidikan,hapus_pendidikan,edit_pendidikan ,tambah_history_pendidikan
 
 
 urlpatterns = [
@@ -14,6 +14,12 @@ urlpatterns = [
    path('tambah_buku/',tambah_buku,name='tambah_buku'),
    path('hapus-data-buku/<int:idbuku>',hapus_buku,name='hapus_buku'),
    path('edit-buku/<int:idbuku>',edit_buku,name='edit_buku'),
+   path('view-buku/<int:idbuku>',view_buku,name='view_buku'),
+
+   path('sekolah/',sekolah,name='sekolah'),
+   path('tambah_sekolah/',tambah_sekolah,name='tambah_sekolah'),
+   path('hapus-data-sekolah/<int:idsekolah>',hapus_sekolah,name='hapus_sekolah'),
+   path('edit-sekolah/<int:idsekolah>',edit_sekolah,name='edit_sekolah'),
 
    path('penulis/',penulis,name='penulis'),
    path('tambah_penulis/',tambah_penulis,name='tambah_penulis'),
@@ -27,6 +33,7 @@ urlpatterns = [
    path('edit-penebit/<int:idpenebit>',edit_penebit,name='edit_penebit'),
 
    path('pendidikan/',pendidikan,name='pendidikan'),
+   path('tambah_history_pendidikan/<int:idpenulis>',tambah_history_pendidikan,name='tambah_history_pendidikan'),
    path('tambah_pendidikan/',tambah_pendidikan,name='tambah_pendidikan'),
    path('hapus-data-pendidikan/<int:idpendidikan>',hapus_pendidikan,name='hapus_pendidikan'),
    path('edit-pendidikan/<int:idpendidikan>',edit_pendidikan,name='edit_pendidikan'),

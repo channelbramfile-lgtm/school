@@ -7,6 +7,8 @@ class Buku(models.Model):
     isbn            = models.CharField(max_length=50,null=True,blank=True,verbose_name="ISBN")
     tahunTerbit     = models.CharField(max_length=20,null=True,blank=True,verbose_name="Tahun Terbit")
     sinopsi         = models.TextField(null=False,blank=False,verbose_name="Sinopsis")
+    foto = models.ImageField(upload_to='foto_buku',null=True,blank=True)
+
 
     def __str__(self):
        return self.judul
@@ -29,13 +31,24 @@ class Penulis(models.Model):
     jk                      = models.CharField(max_length=50,choices=jkelamin,null=True,blank=True,verbose_name="Jenis Kelamin")
     
     instagram                = models.CharField(max_length=50,null=True,blank=True,verbose_name="Instagram")
+
+    foto = models.ImageField(upload_to='foto_penulis',null=True,blank=True)
     
     def __str__(self):
        return self.namapenulis
 
+class Sekolah(models.Model):
+    sekolahId = models.CharField(max_length=50,null=False,blank=False,verbose_name="Sekolah ID")
+    namasekolah = models.CharField(max_length=50,null=False,blank=False,verbose_name="Nama Sekolah")
+
+    def __str__(self):
+       return self.namasekolah
+
 class HistoryPendidikan(models.Model):
     penulis              = models.ForeignKey(Penulis,on_delete=models.CASCADE,null=True,blank=True, verbose_name='Penulis')
     pendidikan           = models.ForeignKey(Pendidikan,on_delete=models.CASCADE,null=True,blank=True, verbose_name='Pendidikan')
+    sekolah           = models.ForeignKey(Sekolah,on_delete=models.CASCADE,null=True,blank=True, verbose_name='Sekolah')
+   
    
 class Penebit(models.Model):
     penebitId          = models.CharField(max_length=50,null=False,blank=False,verbose_name="Penerbit ID")

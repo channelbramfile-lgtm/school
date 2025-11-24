@@ -4,8 +4,8 @@
 
 <div class="row">
     <div class="col-md-4">
-      {%if view.foto %}
-      <img src="{{view.foto.url}}" alt="Foto Profil" height="400" width="200">
+      {%if buku.foto %}
+      <img src="{{buku.foto.url}}" alt="Foto Profil" height="400" width="200">
        {%else%}
        tidak ada foto
         {%endif%}
@@ -46,7 +46,7 @@
   </tbody>
 </table>
 <button class="btn btn-success btn-sm">DATA PENDIDIKAN</button>
-<a href="{%url 'tambah_history_pendidikan' view.id %}" class="btn btn-primary btn-sm">Tambah</a>
+
 
    <table class="table">
   <thead>

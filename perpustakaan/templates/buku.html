@@ -31,6 +31,7 @@
       <th scope="col">ISBN</th>
       <th scope="col">TAHUN TERBIT</th>
       <th scope="col">SINOPSIS</th>
+      <th scope="col">foto</th>
       <th scope="col">AKSI</th>
     </tr>
   </thead>
@@ -44,8 +45,16 @@
     `<td>{{a.tahunTerbit}}</td>
     `<td>{{a.sinopsi}}</td>
     `<td>
+       {%if a.foto %}
+      <img src="{{a.foto.url}}" alt="Foto Buku" height="400" width="200">
+      {%else%}
+       tidak ada foto
+        {%endif%}
+    </td>
+    `<td>
       <a href="{%url 'edit_buku' a.id%}"class="btn btn-warning btn-sm">Edit</a>
-      <a href="{%url 'hapus_buku' a.id%}" class="btn btn-danger btn-sm">Hapus</a>
+      <a href="{%url 'hapus_buku' a.id%}" class="btn btn-danger btn-sm">Hapus</a>'
+      <a href="{%url 'view_buku' a.id%}" class="btn btn-success btn-sm">view</a>
     </td>
 
     </tr>
