@@ -56,3 +56,33 @@ class Penebit(models.Model):
     
     def __str__(self):
        return self.namapenebit
+    
+class Devisi(models.Model):
+ devisiID               = models.CharField(max_length=50,null=False,blank=False,verbose_name="Devisi ID")  
+ devisi            = models.CharField(max_length=50,null=False,blank=False,verbose_name="Devisi")
+ namasingkatan             = models.CharField(max_length=50,null=False,blank=False,verbose_name="Singkatan")   
+
+ def __str__(self):
+       return self.devisi
+    
+class SumberDayaManusia(models.Model):
+    nik              = models.CharField(max_length=50,null=False,blank=False,verbose_name="No. Induk Kepegawaian")  
+    nama             = models.CharField(max_length=200,null=False,blank=False,verbose_name="Nama Lengkap")
+    jkelamin =(
+        ('PRIA','PRIA'),
+        ('WANITA','WANITA'),
+    )
+    jk                      = models.CharField(max_length=50,choices=jkelamin,null=True,blank=True,verbose_name="Jenis Kelamin")
+    nohp             = models.CharField(max_length=50,null=False,blank=False,verbose_name="No. Hp")   
+    tgllahir             = models.DateField(verbose_name="Tanggal Lahir")
+    tempatlahir            = models.CharField(max_length=200,null=False,blank=False,verbose_name="Tempat Lahir")
+    alamat         = models.TextField(null=False,blank=False,verbose_name="Alamat")
+    pendidikan           = models.ForeignKey(Pendidikan,on_delete=models.CASCADE,null=True,blank=True, verbose_name='Pendidikan')
+    devisi           = models.ForeignKey(Devisi,on_delete=models.CASCADE,null=True,blank=True, verbose_name='Devisi')
+    foto = models.ImageField(upload_to='foto_penulis',null=True,blank=True)
+
+
+    def __str__(self):
+       return self.nik
+    
+

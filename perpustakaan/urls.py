@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path,include
-from .views import sekolah,tambah_sekolah,hapus_sekolah,edit_sekolah, dashboard, profil,kontak,alamat,sejarah,buku,tambah_buku,hapus_buku,edit_buku,view_buku,    penulis,tambah_penulis,hapus_penulis,edit_penulis,view_penulis,    penebit,tambah_penebit,hapus_penebit,edit_penebit ,    pendidikan,tambah_pendidikan,hapus_pendidikan,edit_pendidikan ,tambah_history_pendidikan
+from .views import devisi,tambah_devisi,hapus_devisi,edit_devisi ,sdm,tambah_sdm,hapus_sdm,edit_sdm,view_sdm, sekolah,tambah_sekolah,hapus_sekolah,edit_sekolah, dashboard, profil,kontak,alamat,sejarah,buku,tambah_buku,hapus_buku,edit_buku,view_buku,    penulis,tambah_penulis,hapus_penulis,edit_penulis,view_penulis,    penebit,tambah_penebit,hapus_penebit,edit_penebit ,    pendidikan,tambah_pendidikan,hapus_pendidikan,edit_pendidikan ,tambah_history_pendidikan
 
 
 urlpatterns = [
@@ -37,4 +37,19 @@ urlpatterns = [
    path('tambah_pendidikan/',tambah_pendidikan,name='tambah_pendidikan'),
    path('hapus-data-pendidikan/<int:idpendidikan>',hapus_pendidikan,name='hapus_pendidikan'),
    path('edit-pendidikan/<int:idpendidikan>',edit_pendidikan,name='edit_pendidikan'),
+
+   path('sdm/',sdm,name='sdm'),
+   path('tambah_sdm/',tambah_sdm,name='tambah_sdm'),
+   path('hapus-data-sdm/<int:idsdm>',hapus_sdm,name='hapus_sdm'),
+   path('edit-sdm/<int:idsdm>',edit_sdm,name='edit_sdm'),
+   path('view-sdm/<int:idsdm>',view_sdm,name='view_sdm'),
+   # path('view-detail-sdm/<int:id>',view_sdm,name='view_sdm'),
+
+
+   path('devisi/',devisi,name='devisi'),
+   
+   path('tambah_devisi/',tambah_devisi,name='tambah_devisi'),
+   path('hapus-data-devisi/<int:iddevisi>',hapus_devisi,name='hapus_devisi'),
+   path('edit-devisi/<int:iddevisi>',edit_devisi,name='edit_devisi'),
+
 ]

@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-md-4">
+      {%if sdm.foto %}
+      <img src="{{sdm.foto.url}}" alt="Foto Profil" height="400" width="400">
+       {%else%}
+       tidak ada foto
+        {%endif%}
+
+     
+    </div>
+
+    <div class="col-md-8">
+     <table class="table">
+  <thead>
+    
+  </thead>
+  <tbody>
+
+   <tr>
+    <td>NIK</td>
+    <td>{{sdm.nik }}</td>
+   </tr>
+
+   <tr>
+    <td>NAMA</td>
+    <td>{{sdm.nama}}</td>
+   </tr>
+
+   <tr>
+    <td>JENIS KELAMIN</td>
+    <td>{{sdm.jk}}</td>
+   </tr>
+
+   <tr>
+    <td>NO TELEPON</td>
+    <td>{{sdm.nohp}}</td>
+   </tr>
+
+   <tr>
+    <td>TANGGAL LAHIR</td>
+    <td>{{sdm.tgllahir}}</td>
+   </tr>
+
+ <tr>
+    <td>TEMPAT LAHIR</td>
+    <td>{{sdm.tempatlahir}}</td>
+   </tr>
+
+   <tr>
+    <td>ALAMAT</td>
+    <td>{{sdm.alamat}}</td>
+   </tr>
+
+   <tr>
+    <td>PENDIDIKAN</td>
+    <td>{{sdm.pendidikan}}</td>
+   </tr>
+
+   <tr>
+    <td>DEVISI</td>
+    <td>{{sdm.devisi}}</td>
+   </tr>
+
+
+   
+   
+
+
+  </tbody>
+</table>
+
+
+
+  
+    </div>
+ <a href="{%url 'sdm'%}" class="btn btn-warning btn-sm">kembali</a>   
+</div>
+
+{% endblock %}

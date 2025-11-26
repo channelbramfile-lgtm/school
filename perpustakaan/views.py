@@ -1,7 +1,7 @@
 from django.shortcuts import render,redirect
 from django.http import HttpResponse
-from .models import Buku,Penulis,Penebit ,Pendidikan,HistoryPendidikan , Sekolah
-from .forms import Tambah_History_Pendidikan, Tambah_Buku, Edit_Buku, Tambah_Sekolah, Edit_Sekolah, Tambah_Penulis , Edit_Penulis, Tambah_Penebit , Edit_Penebit , Tambah_Pendidikan , Edit_Pendidikan
+from .models import Buku,Penulis,Penebit ,Pendidikan,HistoryPendidikan , Sekolah, SumberDayaManusia, Devisi
+from .forms import Tambah_Devisi , Edit_Devisi, Tambah_SumberDayaManusia , Edit_SumberDayaManusia, Tambah_History_Pendidikan, Tambah_Buku, Edit_Buku, Tambah_Sekolah, Edit_Sekolah, Tambah_Penulis , Edit_Penulis, Tambah_Penebit , Edit_Penebit , Tambah_Pendidikan , Edit_Pendidikan
 from django.contrib import messages
 
 
@@ -57,7 +57,7 @@ def edit_buku(request,idbuku):
     bukuid = Buku.objects.get(id = idbuku)
     ambildata = Buku.objects.filter(id = idbuku).first()
     if request.method =="POST":
-        form =Edit_Buku(request.POST, instance=ambildata)
+        form =Edit_Buku(request.POST,request.FILES, instance=ambildata)
         if form.is_valid():
             form.save()
             messages.success(request,'Data Berhasil DiPerbaharui')
@@ -126,7 +126,7 @@ def edit_penulis(request,idpenulis):
     penulisid = Penulis.objects.get(id = idpenulis)
     ambildata = Penulis.objects.filter(id = idpenulis).first()
     if request.method =="POST":
-        form =Edit_Penulis(request.POST, instance=ambildata)
+        form =Edit_Penulis(request.POST ,request.FILES , instance=ambildata)
         if form.is_valid():
             form.save()
             messages.success(request,'Data Berhasil DiPerbaharui')
@@ -253,6 +253,11 @@ def edit_pendidikan(request,idpendidikan):
 
     return render(request,'Edit_pendidikan.html',context)
 
+
+
+
+
+
 def view_penulis(request,id):
      view = Penulis.objects.filter(id = id).first()
      history =HistoryPendidikan.objects.filter(penulis_id = id)
@@ -339,3 +344,137 @@ def edit_sekolah(request,idsekolah):
     }
 
     return render(request,'Edit_sekolah.html',context)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+def sdm(request):
+
+     #select from sdm 
+    sdm = SumberDayaManusia.objects.all()
+
+    context={
+       'sdm':sdm,
+    }
+    
+   
+    return render(request,'sdm.html',context)
+
+def tambah_sdm(request):
+
+    if request.method == 'POST':
+        form =Tambah_SumberDayaManusia(request.POST,request.FILES)
+        if form.is_valid():
+            form.save()
+            messages.success(request,'Data Berhasil Disimpan')
+            return redirect('sdm')
+            
+    else:
+        form =Tambah_SumberDayaManusia()
+    context = {
+        'form':form,
+    }
+
+    return render(request,'tambah_sdm.html',context)
+
+def hapus_sdm(request,idsdm):
+    sdmid = SumberDayaManusia.objects.get(id = idsdm)
+    sdmid.delete()
+    messages.success(request,'Data Berhasil Dihapus')
+    return redirect('sdm')
+
+def edit_sdm(request,idsdm):
+    sdmid = SumberDayaManusia.objects.get(id = idsdm)
+    ambildata = SumberDayaManusia.objects.filter(id = idsdm).first()
+    if request.method =="POST":
+        form =Edit_SumberDayaManusia(request.POST ,request.FILES , instance=ambildata)
+        if form.is_valid():
+            form.save()
+            messages.success(request,'Data Berhasil DiPerbaharui')
+            return redirect('sdm')
+    else:
+        form =Edit_SumberDayaManusia(instance=ambildata)
+    context = {
+        'form':form,
+    }
+
+    return render(request,'Edit_sdm.html',context)
+
+def view_sdm(request,idsdm):
+     sdm = SumberDayaManusia.objects.filter(id = idsdm).first()
+    
+     context={
+       'sdm':sdm,
+      
+    }
+    
+   
+     return render(request,'view_sdm.html',context) 
+
+
+def devisi(request):
+
+     #select from Devisi
+    devisi = Devisi.objects.all()
+
+    context={
+       'devisi':devisi,
+    }
+    
+   
+    return render(request,'devisi.html',context)
+
+def tambah_devisi(request):
+
+    if request.method == 'POST':
+        form =Tambah_Devisi(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request,'Data Berhasil Disimpan')
+            return redirect('devisi')
+            
+    else:
+        form =Tambah_Devisi()
+    context = {
+        'form':form,
+    }
+
+    return render(request,'tambah_devisi.html',context)
+
+def hapus_devisi(request,iddevisi):
+    devisiid = Devisi.objects.get(id = iddevisi)
+    devisiid.delete()
+    messages.success(request,'Data Berhasil Dihapus')
+    return redirect('devisi')
+
+def edit_devisi(request,iddevisi):
+    devisiid = Devisi.objects.get(id = iddevisi)
+    ambildata = Devisi.objects.filter(id = iddevisi).first()
+    if request.method =="POST":
+        form =Edit_Devisi(request.POST, instance=ambildata)
+        if form.is_valid():
+            form.save()
+            messages.success(request,'Data Berhasil DiPerbaharui')
+            return redirect('devisi')
+    else:
+        form =Edit_Devisi(instance=ambildata)
+    context = {
+        'form':form,
+    }
+
+    return render(request,'Edit_devisi.html',context)
+
+
+
+
+
