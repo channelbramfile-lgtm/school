@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path,include
-from .views import devisi,tambah_devisi,hapus_devisi,edit_devisi ,sdm,tambah_sdm,hapus_sdm,edit_sdm,view_sdm, sekolah,tambah_sekolah,hapus_sekolah,edit_sekolah, dashboard, profil,kontak,alamat,sejarah,buku,tambah_buku,hapus_buku,edit_buku,view_buku,    penulis,tambah_penulis,hapus_penulis,edit_penulis,view_penulis,    penebit,tambah_penebit,hapus_penebit,edit_penebit ,    pendidikan,tambah_pendidikan,hapus_pendidikan,edit_pendidikan ,tambah_history_pendidikan
+from .views import pembelianbuku,tambah_pembelianbuku,hapus_pembelianbuku,edit_pembelianbuku,view_pembelianbuku,   devisi,tambah_devisi,hapus_devisi,edit_devisi ,sdm,tambah_sdm,hapus_sdm,edit_sdm,view_sdm, sekolah,tambah_sekolah,hapus_sekolah,edit_sekolah, dashboard, profil,kontak,alamat,sejarah,buku,tambah_buku,hapus_buku,edit_buku,view_buku,    penulis,tambah_penulis,hapus_penulis,edit_penulis,view_penulis,    penebit,tambah_penebit,hapus_penebit,edit_penebit ,    pendidikan,tambah_pendidikan,hapus_pendidikan,edit_pendidikan ,tambah_history_pendidikan
 
 
 urlpatterns = [
@@ -51,5 +51,12 @@ urlpatterns = [
    path('tambah_devisi/',tambah_devisi,name='tambah_devisi'),
    path('hapus-data-devisi/<int:iddevisi>',hapus_devisi,name='hapus_devisi'),
    path('edit-devisi/<int:iddevisi>',edit_devisi,name='edit_devisi'),
+
+
+   path('pembelianbuku/',pembelianbuku,name='pembelianbuku'),
+   path('tambah_pembelianbuku/',tambah_pembelianbuku,name='tambah_pembelianbuku'),
+   path('hapus-data-pembelianbuku/<int:idpembelianbuku>',hapus_pembelianbuku,name='hapus_pembelianbuku'),
+   path('edit-pembelianbuku/<int:idpembelianbuku>',edit_pembelianbuku,name='edit_pembelianbuku'),
+   path('view-pembelianbuku/<int:idpembelianbuku>',view_pembelianbuku,name='view_pembelianbuku'),
 
 ]

@@ -1,5 +1,5 @@
 from django import forms
-from .models import Buku, Penulis, Penebit, Pendidikan, HistoryPendidikan, Sekolah, SumberDayaManusia,Devisi
+from .models import Buku, Penulis, Penebit, Pendidikan, HistoryPendidikan, Sekolah, SumberDayaManusia,Devisi,PembelianBuku
 from django.forms.widgets import NumberInput
 
 #class form
@@ -80,6 +80,16 @@ class Edit_Devisi(forms.ModelForm):
 class Tambah_Devisi(forms.ModelForm):
     class Meta:
             model = Devisi
+            fields ='__all__'
+
+class Edit_PembelianBuku(forms.ModelForm):
+    class Meta:
+            model = PembelianBuku
+            fields ='__all__'
+
+class Tambah_PembelianBuku(forms.ModelForm):
+    class Meta:
+            model = PembelianBuku
             fields ='__all__'
 
 

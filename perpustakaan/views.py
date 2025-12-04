@@ -1,14 +1,22 @@
 from django.shortcuts import render,redirect
 from django.http import HttpResponse
-from .models import Buku,Penulis,Penebit ,Pendidikan,HistoryPendidikan , Sekolah, SumberDayaManusia, Devisi
-from .forms import Tambah_Devisi , Edit_Devisi, Tambah_SumberDayaManusia , Edit_SumberDayaManusia, Tambah_History_Pendidikan, Tambah_Buku, Edit_Buku, Tambah_Sekolah, Edit_Sekolah, Tambah_Penulis , Edit_Penulis, Tambah_Penebit , Edit_Penebit , Tambah_Pendidikan , Edit_Pendidikan
+from .models import Buku,Penulis,Penebit ,Pendidikan,HistoryPendidikan , Sekolah, SumberDayaManusia, Devisi, PembelianBuku
+from .forms import Tambah_PembelianBuku, Edit_PembelianBuku, Tambah_Devisi , Edit_Devisi, Tambah_SumberDayaManusia , Edit_SumberDayaManusia, Tambah_History_Pendidikan, Tambah_Buku, Edit_Buku, Tambah_Sekolah, Edit_Sekolah, Tambah_Penulis , Edit_Penulis, Tambah_Penebit , Edit_Penebit , Tambah_Pendidikan , Edit_Pendidikan
 from django.contrib import messages
 
 
 # Create your views here.
 
 def dashboard(request):
-    return render(request,'dashboard.html')
+
+    JumlahBuku = Buku.objects.all().count()
+    JumlahPenulis = Penulis.objects.all().count()
+
+    context ={
+        'jumlah':JumlahBuku,
+        'jumlahpenulis':JumlahPenulis,
+    }
+    return render(request,'dashboard.html',context)
 def profil(request):
     return render(request,'profil.html')
 def kontak(request):
@@ -25,6 +33,8 @@ def buku(request):
 
     context={
        'buku':buku,
+        'title':'Manage Buku',
+       
     }
     
    
@@ -473,6 +483,79 @@ def edit_devisi(request,iddevisi):
     }
 
     return render(request,'Edit_devisi.html',context)
+
+
+
+
+
+
+
+
+
+
+
+def pembelianbuku(request):
+
+     #select from pembelianbuku 
+    pembelianbuku = PembelianBuku.objects.all()
+
+    context={
+       'pembelianbuku':pembelianbuku,
+    }
+    
+   
+    return render(request,'pembelianbuku.html',context)
+
+def tambah_pembelianbuku(request):
+
+    if request.method == 'POST':
+        form =Tambah_PembelianBuku(request.POST,request.FILES)
+        if form.is_valid():
+            form.save()
+            messages.success(request,'Data Berhasil Disimpan')
+            return redirect('pembelianbuku')
+            
+    else:
+        form =Tambah_PembelianBuku()
+    context = {
+        'form':form,
+    }
+
+    return render(request,'tambah_pembelianbuku.html',context)
+
+def hapus_pembelianbuku(request,idpembelianbuku):
+    pembelianbukuid = PembelianBuku.objects.get(id = idpembelianbuku)
+    pembelianbukuid.delete()
+    messages.success(request,'Data Berhasil Dihapus')
+    return redirect('pembelianbuku')
+
+def edit_pembelianbuku(request,idpembelianbuku):
+    pembelianbukuid = PembelianBuku.objects.get(id = idpembelianbuku)
+    ambildata = PembelianBuku.objects.filter(id = idpembelianbuku).first()
+    if request.method =="POST":
+        form =Edit_PembelianBuku(request.POST,request.FILES, instance=ambildata)
+        if form.is_valid():
+            form.save()
+            messages.success(request,'Data Berhasil DiPerbaharui')
+            return redirect('pembelianbuku')
+    else:
+        form =Edit_PembelianBuku(instance=ambildata)
+    context = {
+        'form':form,
+    }
+
+    return render(request,'Edit_pembelianbuku.html',context)
+
+def view_pembelianbuku(request,idpembelianbuku):
+     pembelianbuku = PembelianBuku.objects.filter(id = idpembelianbuku).first()
+    
+     context={
+       'pembelianbuku':pembelianbuku,
+      
+    }
+    
+   
+     return render(request,'view_pembelianbuku.html',context) 
 
 
 

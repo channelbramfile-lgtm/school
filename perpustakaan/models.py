@@ -95,7 +95,7 @@ class SumberDayaManusia(models.Model):
        return self.nik
     
 class PembelianBuku(models.Model):
-    pembelianbukuId = models.CharField(max_length=50,null=False,blank=False,verbose_name="Buku ID")
+    pembelianbukuId = models.CharField(max_length=50,null=False,blank=False,verbose_name="Pembelian Buku ID")
     judul           = models.CharField(max_length=250,null=False,blank=False,verbose_name="Judul")
     isbn            = models.CharField(max_length=50,null=True,blank=True,verbose_name="ISBN")
     tahunTerbit     = models.CharField(max_length=20,null=True,blank=True,verbose_name="Tahun Terbit")

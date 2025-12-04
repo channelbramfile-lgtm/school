@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-md-4">
+      {%if pembelianbuku.foto %}
+      <img src="{{pembelianbuku.foto.url}}" alt="Foto Profil" height="400" width="400">
+       {%else%}
+       tidak ada foto
+        {%endif%}
+
+     
+    </div>
+
+    <div class="col-md-8">
+     <table class="table">
+  <thead>
+    
+  </thead>
+  <tbody>
+
+   <tr>
+    <td>Buku ID</td>
+    <td>{{pembelianbuku.bukuId }}</td>
+   </tr>
+
+   <tr>
+    <td>Judul</td>
+    <td>{{pembelianbuku.judul}}</td>
+   </tr>
+
+   <tr>
+    <td>ISBN</td>
+    <td>{{pembelianbuku.isbn}}</td>
+   </tr>
+
+   <tr>
+    <td>Tahun terbit</td>
+    <td>{{pembelianbuku.tahunTerbit}}</td>
+   </tr>
+
+   <tr>
+    <td>Sinopsi</td>
+    <td>{{pembelianbuku.sinopsi}}</td>
+   </tr>
+
+   <tr>
+    <td>Kuantitas</td>
+    <td>{{pembelianbuku.kuantitas}}</td>
+   </tr>
+
+   <tr>
+    <td>Harga</td>
+    <td>{{pembelianbuku.harga}}</td>
+   </tr>
+
+   <tr>
+    <td>created_at</td>
+    <td>{{pembelianbuku.created_at}}</td>
+   </tr>
+
+    <tr>
+    <td>update_at</td>
+    <td>{{pembelianbuku.update_at}}</td>
+   </tr>
+
+   
+
+
+  </tbody>
+</table>
+
+
+
+  
+    </div>
+ <a href="{%url 'pembelianbuku'%}" class="btn btn-warning btn-sm">kembali</a>   
+</div>
+
+{% endblock %}
