@@ -1,13 +1,50 @@
 from django.shortcuts import render,redirect
 from django.http import HttpResponse
-from .models import Buku,Penulis,Penebit ,Pendidikan,HistoryPendidikan , Sekolah, SumberDayaManusia, Devisi, PembelianBuku
-from .forms import Tambah_PembelianBuku, Edit_PembelianBuku, Tambah_Devisi , Edit_Devisi, Tambah_SumberDayaManusia , Edit_SumberDayaManusia, Tambah_History_Pendidikan, Tambah_Buku, Edit_Buku, Tambah_Sekolah, Edit_Sekolah, Tambah_Penulis , Edit_Penulis, Tambah_Penebit , Edit_Penebit , Tambah_Pendidikan , Edit_Pendidikan
+from .models import CustomUser,Buku,Penulis,Penebit ,Pendidikan,HistoryPendidikan , Sekolah, SumberDayaManusia, Devisi, PembelianBuku
+from .forms import CreateCustomeUser,Tambah_PembelianBuku, Edit_PembelianBuku, Tambah_Devisi , Edit_Devisi, Tambah_SumberDayaManusia , Edit_SumberDayaManusia, Tambah_History_Pendidikan, Tambah_Buku, Edit_Buku, Tambah_Sekolah, Edit_Sekolah, Tambah_Penulis , Edit_Penulis, Tambah_Penebit , Edit_Penebit , Tambah_Pendidikan , Edit_Pendidikan
 from django.contrib import messages
+from perpustakaan.EmailBackEnd import EmailBackEnd
+
+from django.contrib.auth import authenticate,login,logout
+
 
 
 # Create your views here.
 
-def dashboard(request):
+def loginPage(request):
+    return render(request,'admin_home/login.html')
+
+def doLogin(request):
+    if request.method != "POST":
+        return HttpResponse("<h2>Not allowed</h2>")
+    else:
+        user=EmailBackEnd.authenticate(request,username=request.POST.get('username'),password=request.POST.get('password'))
+        if user != None:
+            login(request,user)
+            user_type = user.user_type
+            cus = CustomUser.objects.filter(username = user).first()
+            print(cus)
+
+            if user_type =='1':
+                return redirect('admin_dashboard')
+
+                # return HttpResponse('<h2>Selamat datang Admin</h2>')
+            elif user_type == '2':
+                return redirect('anggota_dashboard')
+                # return HttpResponse('<h2>Selamat datang Anggota</h2>')
+           
+            
+            
+            else:
+                messages.error(request='Login Gagal.')
+                return redirect('login')
+        else:
+            messages.error(request='Login Gagal.')
+            return redirect('login')
+
+
+
+def admin_dashboard(request):
 
     JumlahBuku = Buku.objects.all().count()
     JumlahPenulis = Penulis.objects.all().count()
@@ -16,15 +53,17 @@ def dashboard(request):
         'jumlah':JumlahBuku,
         'jumlahpenulis':JumlahPenulis,
     }
-    return render(request,'dashboard.html',context)
+    return render(request,'admin_home/admin_dashboard.html',context)
 def profil(request):
-    return render(request,'profil.html')
+    return render(request,'admin_home/profil.html')
 def kontak(request):
-    return render(request,'kontak.html')
+    return render(request,'admin_home/kontak.html')
 def alamat(request):
-    return render(request,'alamat.html')
+    return render(request,'admin_home/alamat.html')
 def sejarah(request):
-    return render(request,'sejarah.html')
+    return render(request,'admin_home/sejarah.html')
+
+ns1=' buku'
 
 def buku(request):
 
@@ -33,12 +72,12 @@ def buku(request):
 
     context={
        'buku':buku,
-        'title':'Manage Buku',
+        'title':'Manage Buku' + ns1
        
     }
     
    
-    return render(request,'buku.html',context)
+    return render(request,'admin_home/buku.html',context)
 
 def tambah_buku(request):
 
@@ -53,9 +92,10 @@ def tambah_buku(request):
         form =Tambah_Buku()
     context = {
         'form':form,
+        'title':'Tambah Buku',
     }
 
-    return render(request,'tambah_buku.html',context)
+    return render(request,'admin_home/tambah_buku.html',context)
 
 def hapus_buku(request,idbuku):
     bukuid = Buku.objects.get(id = idbuku)
@@ -76,27 +116,29 @@ def edit_buku(request,idbuku):
         form =Edit_Buku(instance=ambildata)
     context = {
         'form':form,
+        'title':'Edit Buku',
     }
 
-    return render(request,'Edit_buku.html',context)
+    return render(request,'admin_home/Edit_buku.html',context)
 
 def view_buku(request,idbuku):
      buku = Buku.objects.filter(id = idbuku).first()
     
      context={
        'buku':buku,
+       'title':'View Buku',
       
     }
     
    
-     return render(request,'view_buku.html',context) 
+     return render(request,'admin_home/view_buku.html',context) 
 
 
 
 
 
 
-
+ns2='Penulis'
 def penulis(request):
 
      #select from penulis 
@@ -104,10 +146,11 @@ def penulis(request):
 
     context={
        'penulis':penulis,
+        'title':'Manage' + ns2
     }
     
    
-    return render(request,'penulis.html',context)
+    return render(request,'admin_home/penulis.html',context)
 
 def tambah_penulis(request):
 
@@ -122,9 +165,10 @@ def tambah_penulis(request):
         form =Tambah_Penulis()
     context = {
         'form':form,
+        'title':'Tambah' + ns2
     }
 
-    return render(request,'tambah_penulis.html',context)
+    return render(request,'admin_home/tambah_penulis.html',context)
 
 def hapus_penulis(request,idpenulis):
     penulisid = Penulis.objects.get(id = idpenulis)
@@ -145,9 +189,10 @@ def edit_penulis(request,idpenulis):
         form =Edit_Penulis(instance=ambildata)
     context = {
         'form':form,
+        'title':'Edit' + ns2
     }
 
-    return render(request,'Edit_penulis.html',context)
+    return render(request,'admin_home/Edit_penulis.html',context)
 
 
 
@@ -165,7 +210,7 @@ def penebit(request):
     }
     
    
-    return render(request,'penebit.html',context)
+    return render(request,'admin_home/penebit.html',context)
 
 def tambah_penebit(request):
 
@@ -182,7 +227,7 @@ def tambah_penebit(request):
         'form':form,
     }
 
-    return render(request,'tambah_penebit.html',context)
+    return render(request,'admin_home/tambah_penebit.html',context)
 
 def hapus_penebit(request,idpenebit):
     penebitid = Penebit.objects.get(id = idpenebit)
@@ -205,7 +250,7 @@ def edit_penebit(request,idpenebit):
         'form':form,
     }
 
-    return render(request,'Edit_penebit.html',context)
+    return render(request,'admin_home/Edit_penebit.html',context)
 
 
 
@@ -221,7 +266,7 @@ def pendidikan(request):
     }
     
    
-    return render(request,'pendidikan.html',context)
+    return render(request,'admin_home/pendidikan.html',context)
 
 def tambah_pendidikan(request):
 
@@ -238,7 +283,7 @@ def tambah_pendidikan(request):
         'form':form,
     }
 
-    return render(request,'tambah_pendidikan.html',context)
+    return render(request,'admin_home/tambah_pendidikan.html',context)
 
 def hapus_pendidikan(request,idpendidikan):
     pendidikanid = Pendidikan.objects.get(id = idpendidikan)
@@ -261,7 +306,7 @@ def edit_pendidikan(request,idpendidikan):
         'form':form,
     }
 
-    return render(request,'Edit_pendidikan.html',context)
+    return render(request,'admin_home/Edit_pendidikan.html',context)
 
 
 
@@ -277,7 +322,7 @@ def view_penulis(request,id):
     }
     
    
-     return render(request,'view_penulis.html',context)
+     return render(request,'admin_home/view_penulis.html',context)
 
 def tambah_history_pendidikan(request,idpenulis):
 
@@ -299,7 +344,7 @@ def tambah_history_pendidikan(request,idpenulis):
     context= {
             'form':form,
         }
-    return render(request,'tambah_history_pendidikan.html',context)    
+    return render(request,'admin_home/tambah_history_pendidikan.html',context)    
 
 
 
@@ -310,10 +355,11 @@ def sekolah(request):
 
     context={
        'sekolah':sekolah,
+       'title':'Manage Sekolah',
     }
     
    
-    return render(request,'sekolah.html',context)
+    return render(request,'admin_home/sekolah.html',context)
 
 def tambah_sekolah(request):
 
@@ -328,9 +374,10 @@ def tambah_sekolah(request):
         form =Tambah_Sekolah()
     context = {
         'form':form,
+        'title':'Tambah Sekolah',
     }
 
-    return render(request,'tambah_sekolah.html',context)
+    return render(request,'admin_home/tambah_sekolah.html',context)
 
 def hapus_sekolah(request,idsekolah):
     sekolahid = Sekolah.objects.get(id = idsekolah)
@@ -351,9 +398,10 @@ def edit_sekolah(request,idsekolah):
         form =Edit_Sekolah(instance=ambildata)
     context = {
         'form':form,
+          'title':'Edit Sekolah',
     }
 
-    return render(request,'Edit_sekolah.html',context)
+    return render(request,'admin_home/Edit_sekolah.html',context)
 
 
 
@@ -378,7 +426,7 @@ def sdm(request):
     }
     
    
-    return render(request,'sdm.html',context)
+    return render(request,'admin_home/sdm.html',context)
 
 def tambah_sdm(request):
 
@@ -395,7 +443,7 @@ def tambah_sdm(request):
         'form':form,
     }
 
-    return render(request,'tambah_sdm.html',context)
+    return render(request,'admin_home/tambah_sdm.html',context)
 
 def hapus_sdm(request,idsdm):
     sdmid = SumberDayaManusia.objects.get(id = idsdm)
@@ -418,7 +466,7 @@ def edit_sdm(request,idsdm):
         'form':form,
     }
 
-    return render(request,'Edit_sdm.html',context)
+    return render(request,'admin_home/Edit_sdm.html',context)
 
 def view_sdm(request,idsdm):
      sdm = SumberDayaManusia.objects.filter(id = idsdm).first()
@@ -429,7 +477,7 @@ def view_sdm(request,idsdm):
     }
     
    
-     return render(request,'view_sdm.html',context) 
+     return render(request,'admin_home/view_sdm.html',context) 
 
 
 def devisi(request):
@@ -442,7 +490,7 @@ def devisi(request):
     }
     
    
-    return render(request,'devisi.html',context)
+    return render(request,'admin_home/devisi.html',context)
 
 def tambah_devisi(request):
 
@@ -459,7 +507,7 @@ def tambah_devisi(request):
         'form':form,
     }
 
-    return render(request,'tambah_devisi.html',context)
+    return render(request,'admin_home/tambah_devisi.html',context)
 
 def hapus_devisi(request,iddevisi):
     devisiid = Devisi.objects.get(id = iddevisi)
@@ -482,7 +530,7 @@ def edit_devisi(request,iddevisi):
         'form':form,
     }
 
-    return render(request,'Edit_devisi.html',context)
+    return render(request,'admin_home/Edit_devisi.html',context)
 
 
 
@@ -504,7 +552,7 @@ def pembelianbuku(request):
     }
     
    
-    return render(request,'pembelianbuku.html',context)
+    return render(request,'admin_home/pembelianbuku.html',context)
 
 def tambah_pembelianbuku(request):
 
@@ -521,7 +569,7 @@ def tambah_pembelianbuku(request):
         'form':form,
     }
 
-    return render(request,'tambah_pembelianbuku.html',context)
+    return render(request,'admin_home/tambah_pembelianbuku.html',context)
 
 def hapus_pembelianbuku(request,idpembelianbuku):
     pembelianbukuid = PembelianBuku.objects.get(id = idpembelianbuku)
@@ -544,7 +592,7 @@ def edit_pembelianbuku(request,idpembelianbuku):
         'form':form,
     }
 
-    return render(request,'Edit_pembelianbuku.html',context)
+    return render(request,'admin_home/Edit_pembelianbuku.html',context)
 
 def view_pembelianbuku(request,idpembelianbuku):
      pembelianbuku = PembelianBuku.objects.filter(id = idpembelianbuku).first()
@@ -555,9 +603,46 @@ def view_pembelianbuku(request,idpembelianbuku):
     }
     
    
-     return render(request,'view_pembelianbuku.html',context) 
+     return render(request,'admin_home/view_pembelianbuku.html',context) 
 
 
 
 
 
+def manage_akun_anggota(request):
+    akun = CustomUser.objects.all()
+
+    context={
+        'tittle':'MANAGE AKUN ANGGOTA',
+        'akunanggota':akun,
+    }
+
+
+    return render(request,'admin_home/manage_akun_anggota.html',context) 
+
+
+
+def tambah_user_anggota(request):
+
+    if request.method == 'POST':
+        form =CreateCustomeUser(request.POST,request.FILES)
+        if form.is_valid():
+            frm = form.save(commit=False)
+            frm.user_type= 2
+            frm.save()
+            messages.success(request,'Akun Berhasil Disimpan')
+            return redirect('manage_akun_anggota')
+            
+    else:
+        form =CreateCustomeUser()
+    context = {
+        'form':form,
+        'title':'FORM TAMBAH USER ANGGOTA',
+    }
+
+    return render(request,'admin_home/tambah_user_anggota.html',context)
+
+def logout_user(request):
+    logout(request)
+    return redirect('loginPage')
+    

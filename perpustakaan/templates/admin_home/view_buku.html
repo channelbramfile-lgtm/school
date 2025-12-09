@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+
+
+
+<div class="row">
+  <div class="col-md-12">
+  {% for message in messages %}
+            <div class="alert {{ message.tags }} alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+                {{ message }}
+            </div>
+        {% endfor %}
+
+
+
+</div>
+
+</div>
+
+<div class="card shadow mb-4">
+                                <div class="card-header py-3">
+                                    <h6 class="m-0 font-weight-bold text-primary">{{title}}</h6>
+                                </div>
+                                <div class="card-body">
+                                    {% comment %} <p>SB Admin 2 makes extensive use of Bootstrap 4 utility classes in order to reduce
+                                        CSS bloat and poor page performance. Custom CSS classes are used to create
+                                        custom components and custom utility classes.</p>
+                                    <p class="mb-0">Before working with this theme, you should become familiar with the
+                                        Bootstrap framework, especially the utility classes.</p> {% endcomment %}
+                              
+                               
+
+                                        {% comment %} first empty {% endcomment %}
+<div class="row">
+    <div class="col-md-4">
+      {%if buku.foto %}
+      <img src="{{buku.foto.url}}" alt="Foto Profil" height="400" width="400">
+       {%else%}
+       tidak ada foto
+        {%endif%}
+
+     
+    </div>
+
+    <div class="col-md-8">
+     <table class="table">
+  <thead>
+    
+  </thead>
+  <tbody>
+
+   <tr>
+    <td>Buku ID</td>
+    <td>{{buku.bukuId }}</td>
+   </tr>
+
+   <tr>
+    <td>Judul</td>
+    <td>{{buku.judul}}</td>
+   </tr>
+
+   <tr>
+    <td>ISBN</td>
+    <td>{{buku.isbn}}</td>
+   </tr>
+
+   <tr>
+    <td>Tahun terbit</td>
+    <td>{{buku.tahunTerbit }}</td>
+   </tr>
+
+   <tr>
+    <td>Deskripsi</td>
+    <td>{{buku.sinopsi}}</td>
+   </tr>
+
+   
+
+
+  </tbody>
+</table>
+
+<a href="{%url 'buku'%}" class="btn btn-warning btn-sm">kembali</a>  
+
+  
+    </div>
+  
+</div>
+                                        
+                                        {% comment %} end  empty {% endcomment %}
+                              </div>
+
+                                <div class="col-md-6">
+
+
+</div>
+
+                                
+                              
+                            </div>
+
+
+
+
+
+{% endblock %}
+
+
+ {% block custome_js %}
+<script>
+ $(document).ready(function() {
+        $('#table').DataTable();
+    });
+  </script>
+{% endblock %}
+
+
+
+

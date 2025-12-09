@@ -1,6 +1,32 @@
 from django.db import models
+#customeruser
+from django.contrib.auth.models import AbstractUser
+
+
 
 # Create your models here.
+
+class Sekolah(models.Model):
+    sekolahId = models.CharField(max_length=50,null=False,blank=False,verbose_name="Sekolah ID")
+    namasekolah = models.CharField(max_length=50,null=False,blank=False,verbose_name="Nama Sekolah")
+    created_at       = models.DateTimeField(auto_now_add=True)
+    update_at        = models.DateTimeField(auto_now=True)
+    def __str__(self):
+       return self.namasekolah
+
+class CustomUser(AbstractUser):
+      USER_TYPE_CHOICES=(
+            (1,'Admin'),
+            (2,'anggota')
+
+      )
+      user_type = models.CharField(max_length=1,choices=USER_TYPE_CHOICES,default='1',verbose_name="Tipe User")
+        
+      def __str__(self):
+       return self.username
+
+
+
 class Buku(models.Model):
     bukuId          = models.CharField(max_length=50,null=False,blank=False,verbose_name="Buku ID")
     judul           = models.CharField(max_length=250,null=False,blank=False,verbose_name="Judul")

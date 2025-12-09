@@ -1,11 +1,23 @@
 from django.contrib import admin
 from django.urls import path,include
-from .views import pembelianbuku,tambah_pembelianbuku,hapus_pembelianbuku,edit_pembelianbuku,view_pembelianbuku,   devisi,tambah_devisi,hapus_devisi,edit_devisi ,sdm,tambah_sdm,hapus_sdm,edit_sdm,view_sdm, sekolah,tambah_sekolah,hapus_sekolah,edit_sekolah, dashboard, profil,kontak,alamat,sejarah,buku,tambah_buku,hapus_buku,edit_buku,view_buku,    penulis,tambah_penulis,hapus_penulis,edit_penulis,view_penulis,    penebit,tambah_penebit,hapus_penebit,edit_penebit ,    pendidikan,tambah_pendidikan,hapus_pendidikan,edit_pendidikan ,tambah_history_pendidikan
+from .admin_views import   logout_user, tambah_user_anggota, manage_akun_anggota, doLogin, loginPage, pembelianbuku,tambah_pembelianbuku,hapus_pembelianbuku,edit_pembelianbuku,view_pembelianbuku,   devisi,tambah_devisi,hapus_devisi,edit_devisi ,sdm,tambah_sdm,hapus_sdm,edit_sdm,view_sdm, sekolah,tambah_sekolah,hapus_sekolah,edit_sekolah, admin_dashboard, profil,kontak,alamat,sejarah,buku,tambah_buku,hapus_buku,edit_buku,view_buku,    penulis,tambah_penulis,hapus_penulis,edit_penulis,view_penulis,    penebit,tambah_penebit,hapus_penebit,edit_penebit ,    pendidikan,tambah_pendidikan,hapus_pendidikan,edit_pendidikan ,tambah_history_pendidikan
 
+from .anggota_views import anggota_dashboard
 
 urlpatterns = [
-   path('',dashboard,name='dashboard'),
+    
+   path('',loginPage,name='loginPage'),
+   path('doLogin/',doLogin, name="doLogin"),
+   path('logout_user/',logout_user, name="logout_user"),
+
+   #halaman admin
+   path('admin_dashboard/',admin_dashboard,name='admin_dashboard'),
    path('profil/',profil,name='profil'),
+
+   path('manage_akun_anggota/',manage_akun_anggota,name='manage_akun_anggota'),
+   path('tambah_user_anggota/',tambah_user_anggota,name='tambah_user_anggota'),
+
+
    path('kontak/',kontak,name='kontak'),
    path('alamat/',alamat,name='alamat'),
    path('sejarah/',sejarah,name='sejarah'),
@@ -59,4 +71,11 @@ urlpatterns = [
    path('edit-pembelianbuku/<int:idpembelianbuku>',edit_pembelianbuku,name='edit_pembelianbuku'),
    path('view-pembelianbuku/<int:idpembelianbuku>',view_pembelianbuku,name='view_pembelianbuku'),
 
+
+
+
+
+
+   #halaman anggota
+   path('anggota_dashboard/',anggota_dashboard,name='anggota_dashboard'),
 ]
