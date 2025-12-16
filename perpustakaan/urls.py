@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.urls import path,include
 from .admin_views import   logout_user, tambah_user_anggota, manage_akun_anggota, doLogin, loginPage, pembelianbuku,tambah_pembelianbuku,hapus_pembelianbuku,edit_pembelianbuku,view_pembelianbuku,   devisi,tambah_devisi,hapus_devisi,edit_devisi ,sdm,tambah_sdm,hapus_sdm,edit_sdm,view_sdm, sekolah,tambah_sekolah,hapus_sekolah,edit_sekolah, admin_dashboard, profil,kontak,alamat,sejarah,buku,tambah_buku,hapus_buku,edit_buku,view_buku,    penulis,tambah_penulis,hapus_penulis,edit_penulis,view_penulis,    penebit,tambah_penebit,hapus_penebit,edit_penebit ,    pendidikan,tambah_pendidikan,hapus_pendidikan,edit_pendidikan ,tambah_history_pendidikan
 
-from .anggota_views import anggota_dashboard
+from .anggota_views import anggota_dashboard,anggota_view_buku,list_buku,anggota_pinjam_buku,daftar_peminjaman_buku
 
 urlpatterns = [
     
@@ -78,4 +78,10 @@ urlpatterns = [
 
    #halaman anggota
    path('anggota_dashboard/',anggota_dashboard,name='anggota_dashboard'),
-]
+   path('anggota_view_buku/<int:idbuku>',anggota_view_buku,name='anggota_view_buku'),
+   path('anggota_list_buku/',list_buku,name='anggota_list_buku'),
+
+    path('anggota/buku/<int:id>/pinjam',anggota_pinjam_buku,name='anggota_pinjam_buku'),
+
+    path('daftar_peminjaman_buku/',daftar_peminjaman_buku,name='daftar_peminjaman_buku'),
+]  

@@ -31,6 +31,7 @@ class Buku(models.Model):
     bukuId          = models.CharField(max_length=50,null=False,blank=False,verbose_name="Buku ID")
     judul           = models.CharField(max_length=250,null=False,blank=False,verbose_name="Judul")
     isbn            = models.CharField(max_length=50,null=True,blank=True,verbose_name="ISBN")
+    stok            = models.IntegerField(null=True,blank=True,verbose_name='Stok Buku')
     tahunTerbit     = models.CharField(max_length=20,null=True,blank=True,verbose_name="Tahun Terbit")
     sinopsi         = models.TextField(null=False,blank=False,verbose_name="Sinopsis")
     foto = models.ImageField(upload_to='foto_buku',null=True,blank=True)
@@ -137,4 +138,20 @@ class PembelianBuku(models.Model):
     def __str__(self):
        return self.judul
     
+
+class PeminjamanBuku(models.Model):
+
+    customuser = models.ForeignKey(CustomUser,on_delete=models.CASCADE, verbose_name='Nama')
+    buku = models.ForeignKey(Buku,on_delete=models.CASCADE, verbose_name='Buku')
+    tanggal_pinjam = models.DateField(verbose_name='Tanggal Pinjam')
+    tanggal_batas_peminjaman = models.DateField(verbose_name='Tanggal Berakhir')
+    tanggal_pengembalian = models.DateField(blank=True,null=True,verbose_name='Tanggal Pengembalian')
+    jumlah_buku = models.IntegerField(blank=True,null=True,verbose_name='Jumlah Buku')
+
+    created_at       = models.DateTimeField(auto_now_add=True)
+    update_at        = models.DateTimeField(auto_now=True)
+    
+
+    def __str__(self):
+       return self.customuser.username  
 
