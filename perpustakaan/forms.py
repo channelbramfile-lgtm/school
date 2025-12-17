@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 
-from .models import CustomUser, Buku, Penulis, Penebit, Pendidikan, HistoryPendidikan, Sekolah, SumberDayaManusia,Devisi,PembelianBuku
+from .models import CustomUser, Buku, Penulis, Penebit, Pendidikan, HistoryPendidikan, Sekolah, SumberDayaManusia,Devisi,PembelianBuku, PeminjamanBuku
 from django.forms.widgets import NumberInput
 
 
@@ -140,5 +140,10 @@ class Tambah_PembelianBuku(forms.ModelForm):
     class Meta:
             model = PembelianBuku
             fields ='__all__'
+
+class UbahStatusPeminjaman(forms.ModelForm):
+      class Meta:
+            model = PeminjamanBuku
+            fields=['status']
 
 

@@ -90,9 +90,25 @@ def anggota_pinjam_buku(request,id):
 
 def daftar_peminjaman_buku(request):
     daftar_buku = PeminjamanBuku.objects.all()
+    today = timezone.now().date()
+
+
+    for a in daftar_buku:
+        if a.tanggal_pinjam:
+            # total hari dari tanggal pinjam sampai hari ini
+            a.total_hari = (today - a.tanggal_pinjam).days
+        else:
+            a.total_hari = 0
+
+        # OPTIONAL: sisa hari sampai batas peminjaman
+        if a.tanggal_batas_peminjaman:
+            a.sisa_hari = (a.tanggal_batas_peminjaman - today).days
+        else:
+            a.sisa_hari = 0
     context ={
         'daftar':daftar_buku,
         'title':'DAFTAR PEMINJAMAN BUKU' 
     }
     return render(request,'anggota/daftar_peminjaman_buku.html',context) 
+
 

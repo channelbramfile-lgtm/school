@@ -146,7 +146,13 @@ class PeminjamanBuku(models.Model):
     tanggal_pinjam = models.DateField(verbose_name='Tanggal Pinjam')
     tanggal_batas_peminjaman = models.DateField(verbose_name='Tanggal Berakhir')
     tanggal_pengembalian = models.DateField(blank=True,null=True,verbose_name='Tanggal Pengembalian')
-    jumlah_buku = models.IntegerField(blank=True,null=True,verbose_name='Jumlah Buku')
+    
+    status_pinjam =(
+        ('Pinjam','Pinjam'),
+        ('Kembali','Kembali')
+    )
+
+    status = models.CharField(max_length=50, choices=status_pinjam ,verbose_name='Status Peminjaman', null=True,blank=True)
 
     created_at       = models.DateTimeField(auto_now_add=True)
     update_at        = models.DateTimeField(auto_now=True)

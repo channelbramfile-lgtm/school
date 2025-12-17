@@ -1,11 +1,13 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect, get_object_or_404
 from django.http import HttpResponse
-from .models import CustomUser,Buku,Penulis,Penebit ,Pendidikan,HistoryPendidikan , Sekolah, SumberDayaManusia, Devisi, PembelianBuku
-from .forms import CreateCustomeUser,Tambah_PembelianBuku, Edit_PembelianBuku, Tambah_Devisi , Edit_Devisi, Tambah_SumberDayaManusia , Edit_SumberDayaManusia, Tambah_History_Pendidikan, Tambah_Buku, Edit_Buku, Tambah_Sekolah, Edit_Sekolah, Tambah_Penulis , Edit_Penulis, Tambah_Penebit , Edit_Penebit , Tambah_Pendidikan , Edit_Pendidikan
+from .models import PeminjamanBuku, CustomUser,Buku,Penulis,Penebit ,Pendidikan,HistoryPendidikan , Sekolah, SumberDayaManusia, Devisi, PembelianBuku
+from .forms import UbahStatusPeminjaman,CreateCustomeUser,Tambah_PembelianBuku, Edit_PembelianBuku, Tambah_Devisi , Edit_Devisi, Tambah_SumberDayaManusia , Edit_SumberDayaManusia, Tambah_History_Pendidikan, Tambah_Buku, Edit_Buku, Tambah_Sekolah, Edit_Sekolah, Tambah_Penulis , Edit_Penulis, Tambah_Penebit , Edit_Penebit , Tambah_Pendidikan , Edit_Pendidikan
 from django.contrib import messages
 from perpustakaan.EmailBackEnd import EmailBackEnd
 
 from django.contrib.auth import authenticate,login,logout
+
+from django.utils import timezone
 
 
 
@@ -645,4 +647,57 @@ def tambah_user_anggota(request):
 def logout_user(request):
     logout(request)
     return redirect('loginPage')
+
+def list_peminjan_buku(request):
+    list_peminjam = PeminjamanBuku.objects.all()
+
+    today = timezone.now().date()
+
+
+    for a in list_peminjam:
+        if a.tanggal_pinjam:
+            # total hari dari tanggal pinjam sampai hari ini
+            a.total_hari = (today - a.tanggal_pinjam).days
+        else:
+            a.total_hari = 0
+
+        # OPTIONAL: sisa hari sampai batas peminjaman
+        if a.tanggal_batas_peminjaman:
+            a.sisa_hari = (a.tanggal_batas_peminjaman - today).days
+        else:
+            a.sisa_hari = 0
+    context = {
+        'list_peminjam':list_peminjam,
+        'title':'DAFTAR PEMINJAM',
+    }
+
+    return render(request,'admin_home/daftar_peminjaman_buku.html',context)
+
+# def ubah_status_peminjaman(request,id):
+#     # ambil_id_peminjaman = PeminjamanBuku.objects.filter(id=id).first()
+#     ambil_id_peminjaman = get_object_or_40(PeminjamanBuku, id=id)
+#     hari_ini = timezone.localdate()
+#     if request.method == "POST":
+#         form = UbahStatusPeminjaman(request.POST)
+#         if form.is_valid():
+#             ubah = form.save(commit=False)
+#             ubah.status = 'Kembali'
+#             ubah.tanggal_pengembalian  = hari_ini
+#             ubah.save()
+#             messages.success(request,'Status Berhasil DI ubah')
+#         else:
+#             form = UbahStatusPeminjaman()
     
+#     context = {
+#         'form':form,
+#         'title':'UBAH STATUS PEMINJAMAN',
+#     }
+
+def ubah_status_peminjaman(request, id):
+    peminjaman = get_object_or_404(PeminjamanBuku, id=id)
+    if request.method == "POST":
+        peminjaman.status = "Kembali"
+        peminjaman.tanggal_pengembalian = timezone.localdate()
+        peminjaman.save(update_fields=["status", "tanggal_pengembalian"])
+        messages.success(request, "Status berhasil diubah menjadi Kembali.")
+    return redirect("list_peminjan_buku")
