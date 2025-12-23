@@ -9,6 +9,8 @@ from django.contrib.auth import authenticate,login,logout
 
 from django.utils import timezone
 
+from django.db.models import Count,Q
+
 
 
 # Create your views here.
@@ -701,3 +703,25 @@ def ubah_status_peminjaman(request, id):
         peminjaman.save(update_fields=["status", "tanggal_pengembalian"])
         messages.success(request, "Status berhasil diubah menjadi Kembali.")
     return redirect("list_peminjan_buku")
+
+def rekap_anggota_pinjam(request):
+    rekap = (
+        PeminjamanBuku.objects
+        .values(
+         'customuser__id','customuser__username'
+        ).annotate(
+            jumlah_buku = Count('id'),
+            #menghitung jumlah buku yang sudah kembali berdasarkan tanggal kembali
+            jumlah_kembali       = Count('id', filter=Q(tanggal_pengembalian__isnull = False)),
+            #menghitung jumlah buku yang belum kembali berdasarkan tanggal kembali
+            jumlah_belum_kembali = Count('id', filter=Q(tanggal_pengembalian__isnull = True)),
+
+        ).order_by('customuser__username')
+
+       )
+    context={
+       'title':"REKAP PEMINJAMAN BUKU",
+       'rekap':rekap,
+
+   }
+    return render(request,'admin_home/rekap_anggota_pinjam.html',context)

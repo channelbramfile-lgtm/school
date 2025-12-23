@@ -1,4 +1,5 @@
-{% extends 'anggota/base.html' %}
+{% extends 'admin_home/base.html' %}
+{% load crispy_forms_tags %}
 
 {% block content %}
   <div class="row">
@@ -33,13 +34,11 @@
             <th scope="col">TOTAL HARI PINJAM</th>
             <th scope="col">SISA HARI</th>
             <th scope="col">TGL.PENGEMBALIAN</th>
-            <th scope="col">DENDA</th>
-
             <th scope="col">AKSI</th>
           </tr>
         </thead>
         <tbody>
-          {% for a in daftar %}
+          {% for a in list_peminjam %}
             <tr>
               <th scope="row">{{ forloop.counter }}</th>
               <td>{{ a.buku.bukuId }}</td>
@@ -61,22 +60,44 @@
 
               <td>{{ a.tanggal_pengembalian }}</td>
               <td>
-                {% if a.hari_telambat > 0 %}
-                  <span class="badge badge-danger">{{ a.denda }} hari lagi</span>
-                {% else %}
-                  <span class="badge badge-primary">Tiak ada Denda</span>
-                {% endif %}
-              </td>
-              <td>
-                <a href="{% url 'view_buku' a.id %}" class="btn btn-success btn-sm"><i class="fas fa-eye"></i></a>
+                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modalUbah-{{ a.id }}">ubah</button>
+                {% comment %} <a href="{% url 'view_buku' a.id %}" class="btn btn-success btn-sm"><i class="fas fa-eye"></i></a> {% endcomment %}
 
-                <form action="" method="POST">
+                {% comment %} <form action="" method="POST">
                   {% csrf_token %}
                   <button type="submit" class="btn btn-warning btn-sm"><i class="fas fa-cart-plus"></i></button>
-                </form>
+                </form> {% endcomment %}
                 {% comment %} <a href="" class="btn btn-warning btn-sm"><i class="fas fa-cart-plus"></i></a> {% endcomment %}
               </td>
             </tr>
+
+            <!-- Modal di luar <tr> -->
+            <div class="modal fade" id="modalUbah-{{ a.id }}" tabindex="-1" role="dialog" aria-labelledby="modalUbahLabel-{{ a.id }}" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <form action="{% url 'ubah_status_peminjaman' a.id %}" method="POST">
+                    {% csrf_token %}
+
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="modalUbahLabel-{{ a.id }}">UBAH STATUS PEMINJAMAN</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    </div>
+
+                    <div class="modal-body">
+                      <p>
+                        Ubah status peminjaman buku <b>{{ a.buku.judul }}</b> menjadi <b>Kembali</b>?
+                      </p>
+                      <input type="hidden" name="status" value="Kembali" />
+                    </div>
+
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">batal</button>
+                      <button type="submit" class="btn btn-primary">ubah</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
           {% endfor %}
         </tbody>
       </table>

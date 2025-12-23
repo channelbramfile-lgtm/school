@@ -89,7 +89,10 @@ def anggota_pinjam_buku(request,id):
     
 
 def daftar_peminjaman_buku(request):
-    daftar_buku = PeminjamanBuku.objects.all()
+    id = request.user.id #mengambil id user yang login
+
+    user = CustomUser.objects.filter(id=id).first() # ambil id sesuai user yang login
+    daftar_buku = PeminjamanBuku.objects.filter(customuser_id=user) # menmapikan data peminjaman buku sesua user yang login
     today = timezone.now().date()
 
 
@@ -110,5 +113,9 @@ def daftar_peminjaman_buku(request):
         'title':'DAFTAR PEMINJAMAN BUKU' 
     }
     return render(request,'anggota/daftar_peminjaman_buku.html',context) 
+
+def logout_anggota(request):
+    logout(request)
+    return redirect('loginPage')
 
 
