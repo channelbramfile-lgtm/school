@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      @page {
+        size: a4 landscape;
+        margin: 1cm;
+      }
+      body {
+        font-family: sans-serif;
+        font-size: 10px;
+      }
+      .header {
+        text-align: center;
+        margin-bottom: 20px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      th,
+      td {
+        border: 1px solid #333;
+        padding: 5px;
+        text-align: center;
+      }
+      th {
+        background-color: #f2f2f2;
+      }
+      .text-left {
+        text-align: left;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <h2>{{ title }}</h2>
+      <p>Nama Anggota: {{ user.first_name }} {{ user.last_name }} ({{ user.username }}) | Tanggal Cetak: {{ today }}</p>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>ID</th>
+          <th>JUDUL</th>
+          <th>ISBN</th>
+          <th>TAHUN TERBIT</th>
+          <th>TGL.PINJAM</th>
+          <th>TGL.BERAKHIR</th>
+          <th>TOTAL HARI</th>
+          <th>SISA HARI</th>
+          <th>TGL.KEMBALI</th>
+          <th>DENDA</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for a in daftar_buku %}
+          <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ a.buku.bukuId }}</td>
+            <td class="text-left">{{ a.buku.judul }}</td>
+            <td>{{ a.buku.isbn }}</td>
+            <td>{{ a.buku.tahunTerbit }}</td>
+            <td>{{ a.tanggal_pinjam }}</td>
+            <td>{{ a.tanggal_batas_peminjaman }}</td>
+            <td>{{ a.total_hari }} Hari</td>
+            <td>{{ a.sisa_hari }} Hari</td>
+            <td>{{ a.tanggal_pengembalian|default:'-' }}</td>
+            <td>
+              {% if a.hari_telambat > 0 %}
+                Rp {{ a.denda }}
+              {% else %}
+                -
+              {% endif %}
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </body>
+</html>

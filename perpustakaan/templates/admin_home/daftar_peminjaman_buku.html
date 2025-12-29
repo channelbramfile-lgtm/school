@@ -56,7 +56,7 @@
               <td>{{ a.buku.judul }}</td>
               <td>{{ a.buku.isbn }}</td>
               <td>{{ a.buku.tahunTerbit }}</td>
-              <td>{{ a.tanggal_pinjam }}</td>
+              <td>{{ a.tanggal_pinjam|date:'d F Y' }}</td>
               <td>{{ a.tanggal_batas_peminjaman }}</td>
               <td>{{ a.total_hari }} hari</td>
               <td>
@@ -69,7 +69,7 @@
                 {% endif %}
               </td>
 
-              <td>{{ a.tanggal_pengembalian }}</td>
+              <td>{{ a.tanggal_pengembalian|date:'d F Y' }}</td>
               <td>
                 <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modalUbah-{{ a.id }}">ubah</button>
                 {% comment %} <a href="{% url 'view_buku' a.id %}" class="btn btn-success btn-sm"><i class="fas fa-eye"></i></a> {% endcomment %}
@@ -121,7 +121,20 @@
 {% block custome_js %}
   <script>
     $(document).ready(function () {
-      $('#table').DataTable()
+      $('#table').DataTable({
+        dom: 'Bfrtip',
+        buttons: [
+          {
+            extend: 'excelHtml5',
+            text: '<i class="fas fa-file-excel"></i> Export Excel',
+            className: 'btn btn-success btn-sm',
+            title: 'Data Peminjaman Buku',
+            exportOptions: {
+              columns: ':not(:last-child)' // kolom AKSI tidak ikut
+            }
+          }
+        ]
+      })
     })
   </script>
 {% endblock %}

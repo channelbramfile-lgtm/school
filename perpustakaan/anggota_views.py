@@ -10,7 +10,8 @@ from django.contrib.auth import authenticate,login,logout
 from django.utils import timezone
 from datetime import timedelta
 
-
+from django.template.loader import get_template
+from xhtml2pdf import pisa # Pastikan sudah install: pip install xhtml2pdf
 
 
 # Create your views here.
@@ -119,3 +120,42 @@ def logout_anggota(request):
     return redirect('loginPage')
 
 
+def laporan_peminjaman_pdf(request):
+    # 1. Ambil data sesuai user yang login
+    user = request.user
+    daftar_buku = PeminjamanBuku.objects.filter(customuser=user)
+    today = timezone.now().date()
+
+    # 2. Tambahkan logika perhitungan (sama seperti di view daftar_peminjaman_buku)
+    for a in daftar_buku:
+        # Total Hari Pinjam
+        if a.tanggal_pinjam:
+            a.total_hari = (today - a.tanggal_pinjam).days
+        else:
+            a.total_hari = 0
+        
+        # Sisa Hari
+        if a.tanggal_batas_peminjaman:
+            a.sisa_hari = (a.tanggal_batas_peminjaman - today).days
+        else:
+            a.sisa_hari = 0
+
+    # 3. Render ke PDF
+    template_path = 'anggota/pdf_laporan_peminjaman.html'
+    context = {
+        'daftar_buku': daftar_buku,
+        'user': user,
+        'today': today,
+        'title': 'LAPORAN PEMINJAMAN BUKU ANGGOTA'
+    }
+    
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="Laporan_Pinjam_{user.username}.pdf"'
+    
+    template = get_template(template_path)
+    html = template.render(context)
+
+    pisa_status = pisa.CreatePDF(html, dest=response)
+    if pisa_status.err:
+       return HttpResponse('Terjadi kesalahan saat membuat PDF', status=500)
+    return response

@@ -22,6 +22,9 @@
     <link href="https://cdn.datatables.net/2.3.5/css/dataTables.bootstrap5.css" rel="stylesheet" />
 
     {% comment %} <link href="https://cdn.datatables.net/responsive/3.0.7/css/responsive.bootstrap5.css" rel="stylesheet" /> {% endcomment %}
+
+    <!-- Custom fonts for this template new -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.bootstrap5.min.css" />
   </head>
 
   <body id="page-top">
@@ -78,6 +81,22 @@
 
               <a class="collapse-item" href="{% url 'sekolah' %}">Sekolah</a>
               <a class="collapse-item" href="{% url 'list_peminjan_buku' %}">list peminjan buku</a>
+            </div>
+          </div>
+        </li>
+
+        <!-- Menu Report -->
+        <li class="nav-item">
+          <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseReport" aria-expanded="true" aria-controls="collapseTwo">
+            <i class="fas fa-fw fa-cog"></i>
+            <span>Laporan</span>
+          </a>
+          <div id="collapseReport" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+              <h6 class="collapse-header">Report</h6>
+
+              <a class="collapse-item" href="{% url 'rekap_anggota' %}">anggota</a>
+              <a class="collapse-item" href="{% url 'peminjaman_filter_pinjam' %}">peminjaman</a>
             </div>
           </div>
         </li>
@@ -398,6 +417,17 @@
     <!-- Page level custom scripts -->
     <script src="{% static 'js/demo/chart-area-demo.js' %}"></script>
     <script src="{% static 'js/demo/chart-pie-demo.js' %}"></script>
+
+    <!-- Bootstrap core JavaScript new -->
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.bootstrap5.min.js"></script>
+
+    <!-- Export dependencies -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
+
+    <!-- Bootstrap core JavaScript new end -->
 
     {% block custome_js %}
 

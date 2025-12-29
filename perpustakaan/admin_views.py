@@ -1,7 +1,11 @@
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph
+from reportlab.lib.pagesizes import A4
+from reportlab.lib import colors
+from reportlab.lib.styles import getSampleStyleSheet
 from django.shortcuts import render,redirect, get_object_or_404
 from django.http import HttpResponse
 from .models import PeminjamanBuku, CustomUser,Buku,Penulis,Penebit ,Pendidikan,HistoryPendidikan , Sekolah, SumberDayaManusia, Devisi, PembelianBuku
-from .forms import UbahStatusPeminjaman,CreateCustomeUser,Tambah_PembelianBuku, Edit_PembelianBuku, Tambah_Devisi , Edit_Devisi, Tambah_SumberDayaManusia , Edit_SumberDayaManusia, Tambah_History_Pendidikan, Tambah_Buku, Edit_Buku, Tambah_Sekolah, Edit_Sekolah, Tambah_Penulis , Edit_Penulis, Tambah_Penebit , Edit_Penebit , Tambah_Pendidikan , Edit_Pendidikan
+from .forms import FilterTanggalPinjamForm,UbahStatusPeminjaman,CreateCustomeUser,Tambah_PembelianBuku, Edit_PembelianBuku, Tambah_Devisi , Edit_Devisi, Tambah_SumberDayaManusia , Edit_SumberDayaManusia, Tambah_History_Pendidikan, Tambah_Buku, Edit_Buku, Tambah_Sekolah, Edit_Sekolah, Tambah_Penulis , Edit_Penulis, Tambah_Penebit , Edit_Penebit , Tambah_Pendidikan , Edit_Pendidikan
 from django.contrib import messages
 from perpustakaan.EmailBackEnd import EmailBackEnd
 
@@ -10,6 +14,9 @@ from django.contrib.auth import authenticate,login,logout
 from django.utils import timezone
 
 from django.db.models import Count,Q
+
+from datetime import date
+
 
 
 
@@ -725,3 +732,158 @@ def rekap_anggota_pinjam(request):
 
    }
     return render(request,'admin_home/rekap_anggota_pinjam.html',context)
+
+def rekap_anggota(request):
+    rekap = CustomUser.objects.all()
+    jumlah_aktif = CustomUser.objects.filter(is_active=True).count()
+    jumlah_tidak_aktif = CustomUser.objects.filter(is_active=False).count()
+    jumlah_total = jumlah_aktif + jumlah_tidak_aktif
+
+    context={
+       'title':"REKAP ANGGOTA" ,
+       'rekap':rekap,
+       'jumlah_aktif': jumlah_aktif,
+        'jumlah_tidak_aktif': jumlah_tidak_aktif,
+        'jumlah_total': jumlah_total,
+
+   }
+    return render(request,'admin_home/rekap_anggota.html',context)
+
+def laporan_rekap_anggota_pdf(request):
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'inline; filename="laporan_rekap_anggota.pdf"'
+
+    doc = SimpleDocTemplate(
+        response,
+        pagesize=A4,
+        rightMargin=30,
+        leftMargin=30,
+        topMargin=30,
+        bottomMargin=18
+    )
+
+    styles = getSampleStyleSheet()
+    elements = []
+
+    # ===== JUDUL =====
+    elements.append(Paragraph("<b>LAPORAN REKAP ANGGOTA</b>", styles['Title']))
+    elements.append(Paragraph(f"Tanggal Cetak: {date.today()}", styles['Normal']))
+    elements.append(Paragraph("<br/>", styles['Normal']))
+
+    # ===== HITUNG DATA =====
+    users = CustomUser.objects.all()
+
+    jumlah_aktif = users.filter(is_active=True).count()
+    jumlah_tidak_aktif = users.filter(is_active=False).count()
+    jumlah_total = jumlah_aktif + jumlah_tidak_aktif
+
+    # ===== RINGKASAN =====
+    ringkasan = [
+        ["Total Anggota", jumlah_total],
+        ["Anggota Aktif", jumlah_aktif],
+        ["Anggota Tidak Aktif", jumlah_tidak_aktif],
+    ]
+
+    table_ringkasan = Table(ringkasan, colWidths=[200, 100])
+    table_ringkasan.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.lightgrey),
+        ('GRID', (0, 0), (-1, -1), 1, colors.black),
+        ('ALIGN', (1, 0), (-1, -1), 'CENTER'),
+    ]))
+
+    elements.append(table_ringkasan)
+    elements.append(Paragraph("<br/><br/>", styles['Normal']))
+
+    # ===== TABEL DETAIL =====
+    data = [["No", "Username", "Nama Lengkap", "Email", "Status", "Tanggal Join"]]
+
+    for i, u in enumerate(users, start=1):
+        data.append([
+            i,
+            u.username,
+            f"{u.first_name} {u.last_name}",
+            u.email,
+            "Aktif" if u.is_active else "Tidak Aktif",
+            u.date_joined.strftime("%d-%m-%Y")
+        ])
+
+    table = Table(data, repeatRows=1)
+    table.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.lightblue),
+        ('GRID', (0, 0), (-1, -1), 1, colors.black),
+        ('ALIGN', (0, 1), (0, -1), 'CENTER'),
+        ('ALIGN', (4, 1), (4, -1), 'CENTER'),
+        ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+    ]))
+
+    elements.append(table)
+
+    doc.build(elements)
+    return response
+
+def peminjaman_filter_pinjam(request):
+    form = FilterTanggalPinjamForm(request.GET or None)
+
+    # Default: jangan tampilkan data sebelum user filter
+    daftar = PeminjamanBuku.objects.none()
+    tampilkan = False
+
+    if form.is_valid():
+        mulai = form.cleaned_data["mulai"]
+        selesai = form.cleaned_data["selesai"]
+
+        daftar = (
+            PeminjamanBuku.objects
+            .select_related("customuser", "buku")
+            .filter(tanggal_pinjam__range=(mulai, selesai))
+            .order_by("-tanggal_pinjam")
+        )
+        tampilkan = True
+
+    context = {
+        "title": "Filter Peminjaman (Berdasarkan Tanggal Pinjam)",
+        "form": form,
+        "daftar": daftar,
+        "tampilkan": tampilkan,
+    }
+    return render(request, "admin_home/peminjaman_filter_pinjam.html", context)
+# def tambah_rekap_anggota(request):
+
+#     if request.method == 'POST':
+#         form =Tambah_Pendidikan(request.POST)
+#         if form.is_valid():
+#             form.save()
+#             messages.success(request,'Data Berhasil Disimpan')
+#             return redirect('rekap_anggota')
+            
+#     else:
+#         form =Tambah_Pendidikan()
+#     context = {
+#         'form':form,
+#     }
+
+#     return render(request,'admin_home/tambah_rekap_anggota.html',context)
+
+# def hapus_rekap_anggota(request,idrekap_anggota):
+#     rekap_anggotaid = Pendidikan.objects.get(id = idrekap_anggota)
+#     rekap_anggotaid.delete()
+#     messages.success(request,'Data Berhasil Dihapus')
+#     return redirect('rekap_anggota')
+
+# def edit_rekap_anggota(request,idrekap_anggota):
+#     rekap_anggotaid = Pendidikan.objects.get(id = idrekap_anggota)
+#     ambildata = Pendidikan.objects.filter(id = idrekap_anggota).first()
+#     if request.method =="POST":
+#         form =Edit_Pendidikan(request.POST, instance=ambildata)
+#         if form.is_valid():
+#             form.save()
+#             messages.success(request,'Data Berhasil DiPerbaharui')
+#             return redirect('rekap_anggota')
+#     else:
+#         form =Edit_Pendidikan(instance=ambildata)
+#     context = {
+#         'form':form,
+#     }
+
+#     return render(request,'admin_home/Edit_rekap_anggota.html',context)
+

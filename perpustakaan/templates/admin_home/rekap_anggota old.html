@@ -1,0 +1,48 @@
+{% extends 'admin_home/base.html' %}
+
+{% block content %}
+  <div class="row">
+    {% for message in messages %}
+      <div class="alert {{ message.tags }} alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        {{ message }}
+      </div>
+    {% endfor %}
+    <div class="col-md-6">
+      {% comment %} <a href="{% url 'tambah_pendidikan' %}" class="btn btn-primary btn-sm">Tambah</a> {% endcomment %}
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">USERNAME</th>
+            <th scope="col">NAMA LENGKAP</th>
+            <th scope="col">EMAIL</th>
+
+            <th scope="col">AKTIF</th>
+
+            <th scope="col">TANGGAL JOIN</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for a in rekap_anggota %}
+            <tr>
+              <th scope="row">{{ forloop.counter }}</th>
+              <td>{{ a.username }}</td>
+              <td>{{ a.first_name }} {{ a.last_name }}</td>
+
+              <td>{{ a.email }}</td>
+              <td>{{ a.is_active }}</td>
+              <td>{{ a.date_joined }}</td>
+
+              <td></td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+{% endblock %}

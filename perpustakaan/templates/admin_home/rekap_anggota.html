@@ -1,0 +1,71 @@
+{% extends 'admin_home/base.html' %}
+
+{% block content %}
+  <div class="row">
+    <div class="col-md-12">
+      {% for message in messages %}
+        <div class="alert {{ message.tags }} alert-dismissible" role="alert">
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          {{ message }}
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="card shadow mb-4">
+    <div class="card-header py-3">
+      <h6 class="m-0 font-weight-bold text-primary">{{ title }}</h6>
+    </div>
+    <div class="card-body">
+      <a href="{% url 'laporan_rekap_anggota_pdf' %}" target="_blank" class="btn btn-danger btn-sm mb-3"><i class="fas fa-file-pdf"></i> Cetak PDF</a>
+
+      <p>Jumlah Anggota : {{ jumlah_total }}</p>
+      <p>
+        <button type="button" class="btn btn-primary btn-sm">Aktif <span class="badge text-bg-dark">{{ jumlah_aktif }}</span></button>
+        <button type="button" class="btn btn-danger btn-sm">Tidak Aktif <span class="badge text-bg-dark">{{ jumlah_tidak_aktif }}</span></button>
+      </p>
+      {% comment %} <p>SB Admin 2 makes extensive use of Bootstrap 4 utility classes in order to reduce CSS bloat and poor page performance. Custom CSS classes are used to create custom components and custom utility classes.</p>
+      <p class="mb-0">Before working with this theme, you should become familiar with the Bootstrap framework, especially the utility classes.</p> {% endcomment %}
+      {% comment %} <a href="{% url 'tambah_buku' %}" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i></a> {% endcomment %}
+      <table class="table table-bordered" id="table">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">USERNAME</th>
+            <th scope="col">NAMA LENGKAP</th>
+            <th scope="col">EMAIL</th>
+
+            <th scope="col">AKTIF</th>
+
+            <th scope="col">TANGGAL JOIN</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for a in rekap %}
+            <tr>
+              <th scope="row">{{ forloop.counter }}</th>
+              <td>{{ a.username }}</td>
+              <td>{{ a.first_name }} {{ a.last_name }}</td>
+
+              <td>{{ a.email }}</td>
+              <td>{{ a.is_active }}</td>
+              <td>{{ a.date_joined }}</td>
+
+              <td></td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="col-md-6"></div>
+  </div>
+{% endblock %}
+
+{% block custome_js %}
+  <script>
+    $(document).ready(function () {
+      $('#table').DataTable()
+    })
+  </script>
+{% endblock %}
